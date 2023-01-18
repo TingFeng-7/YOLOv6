@@ -1,0 +1,23 @@
+# Please insure that your custom_dataset are put in same parent dir with YOLOv6_DIR
+
+
+train: VisDrone2019-DET-train/images  # train images (relative to 'path')  6471 images
+val: VisDrone2019-DET-val/images  # val images (relative to 'path')  548 images
+test: VisDrone2019-DET-test-dev/images  # test images (optional)  1610 images
+
+# whether it is coco dataset, only coco dataset should be set to True.
+is_coco: False
+# Classes
+nc: 20  # number of classes
+  # class names
+names:
+  0: pedestrian
+  1: people
+  2: bicycle
+  3: car
+  4: van
+  5: truck
+  6: tricycle
+  7: awning-tricycle
+  8: bus
+  9: motor

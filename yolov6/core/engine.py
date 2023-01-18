@@ -138,7 +138,7 @@ class Trainer:
             self.plot_train_batch(images, targets)
             write_tbimg(self.tblogger, self.vis_train_batch, self.step + self.max_stepnum * self.epoch, type='train')
 
-        # forward
+        # forward 半精度
         with amp.autocast(enabled=self.device != 'cpu'):
             preds, s_featmaps = self.model(images)
             if self.args.distill:

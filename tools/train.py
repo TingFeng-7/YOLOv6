@@ -23,7 +23,7 @@ from yolov6.utils.general import increment_name, find_latest_checkpoint
 
 def get_args_parser(add_help=True):
     parser = argparse.ArgumentParser(description='YOLOv6 PyTorch Training', add_help=add_help)
-    parser.add_argument('--data-path', default='./data/coco.yaml', type=str, help='path of dataset')
+    parser.add_argument('--data-path', default='./data/coco.yaml', type=str, help='path of dataset') 
     parser.add_argument('--conf-file', default='./configs/yolov6n.py', type=str, help='experiments description file')
     parser.add_argument('--img-size', default=640, type=int, help='train, val image size (pixels)')
     parser.add_argument('--batch-size', default=32, type=int, help='total batch size for all GPUs')
@@ -37,6 +37,8 @@ def get_args_parser(add_help=True):
     parser.add_argument('--check-images', action='store_true', help='check images when initializing datasets')
     parser.add_argument('--check-labels', action='store_true', help='check label files when initializing datasets')
     parser.add_argument('--output-dir', default='./runs/train', type=str, help='path to save outputs')
+    # 输出路径
+    # 输出名字
     parser.add_argument('--name', default='exp', type=str, help='experiment name, saved to output_dir/name')
     parser.add_argument('--dist_url', default='env://', type=str, help='url used to set up distributed training')
     parser.add_argument('--gpu_count', type=int, default=0)
@@ -58,6 +60,8 @@ def get_args_parser(add_help=True):
 
 def check_and_init(args):
     '''check config files and device.'''
+    # tinfeng change outputdir 配置文件的父目录
+    args.output_dir = os.path.pardir(args.conf_file) 
     # check files
     master_process = args.rank == 0 if args.world_size > 1 else args.rank == -1
     if args.resume:
@@ -104,7 +108,7 @@ def main(args):
     LOGGER.info(f'training args are: {args}\n')
     if args.local_rank != -1: # if DDP mode
         torch.cuda.set_device(args.local_rank)
-        device = torch.device('cuda', args.local_rank)
+        device = torch.device('cuda', args.local_rank) # change device
         LOGGER.info('Initializing process group... ')
         dist.init_process_group(backend="nccl" if dist.is_nccl_available() else "gloo", \
                 init_method=args.dist_url, rank=args.local_rank, world_size=args.world_size)

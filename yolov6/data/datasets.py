@@ -41,6 +41,7 @@ for k, v in ExifTags.TAGS.items():
         break
 
 
+# Dataset 目录
 class TrainValDataset(Dataset):
     '''YOLOv6 train_loader/val_loader, loads images and labels for training and validation.'''
     def __init__(
@@ -64,7 +65,10 @@ class TrainValDataset(Dataset):
         self.__dict__.update(locals())
         self.main_process = self.rank in (-1, 0)
         self.task = self.task.capitalize()
-        self.class_names = data_dict["names"]
+        self.class_names = data_dict["names"] #一个列表
+        if isinstance(self.class_names, dict):
+            self.class_names = [x for x in data_dict["names"].items()]
+        print(self.class_names)
         self.img_paths, self.labels = self.get_imgs_labels(self.img_dir)
         if self.rect:
             shapes = [self.img_info[p]["shape"] for p in self.img_paths]
@@ -216,7 +220,7 @@ class TrainValDataset(Dataset):
         return torch.stack(img, 0), torch.cat(label, 0), path, shapes
 
     def get_imgs_labels(self, img_dir):
-
+        # 通过图片的路径获取
         assert osp.exists(img_dir), f"{img_dir} is an invalid directory path!"
         valid_img_record = osp.join(
             osp.dirname(img_dir), "." + osp.basename(img_dir) + ".json"
@@ -268,7 +272,7 @@ class TrainValDataset(Dataset):
             with open(valid_img_record, "w") as f:
                 json.dump(cache_info, f)
 
-        # check and load anns
+        # check and load anns label_dir
         base_dir = osp.basename(img_dir)
         if base_dir != "":
             label_dir = osp.join(
